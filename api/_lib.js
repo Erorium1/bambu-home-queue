@@ -59,6 +59,14 @@ export async function ensureSchema() {
       hours NUMERIC(6,2) NOT NULL DEFAULT 1,
       created_at TIMESTAMPTZ NOT NULL DEFAULT now()
     )`;
+    await sql`ALTER TABLE print_queue ADD COLUMN IF NOT EXISTS image_url TEXT`;
+    await sql`CREATE TABLE IF NOT EXISTS link_preview (
+      url TEXT PRIMARY KEY,
+      title TEXT,
+      image TEXT,
+      ok BOOLEAN NOT NULL DEFAULT false,
+      fetched_at TIMESTAMPTZ NOT NULL DEFAULT now()
+    )`;
     await sql`CREATE TABLE IF NOT EXISTS login_fails (
       ip TEXT NOT NULL,
       at TIMESTAMPTZ NOT NULL DEFAULT now()
@@ -159,9 +167,24 @@ export function wrap(fn) {
 /* ---------- telegram ---------- */
 const esc = (s) => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
-export async function telegram(lines) {
+export async function telegram(lines, photo) {
   if (!BOT_TOKEN || !OWNER_ID) return { ok: false, skipped: true };
   const text = lines.filter((l) => l !== null && l !== undefined && l !== false).join('\n');
+  if (photo) {
+    // фото модели + подпись; если Telegram не примет картинку — отправим обычным текстом
+    try {
+      const r = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ chat_id: OWNER_ID, photo: photo.replace('format,webp', 'format,jpg'), caption: text.slice(0, 1024), parse_mode: 'HTML' }),
+      });
+      const j = await r.json().catch(() => ({}));
+      if (j.ok) return { ok: true };
+      console.error('telegram photo error', j);
+    } catch (e) {
+      console.error('telegram photo fail', e);
+    }
+  }
   try {
     const r = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
       method: 'POST',

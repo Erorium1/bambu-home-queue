@@ -1,54 +1,49 @@
-// Встроенный каталог. q — запрос для поиска на MakerWorld (каталог Bambu Lab).
-// h — примерное время печати на Bambu (часы), lvl: 1 быстро · 2 средне · 3 долго
+// Каталог: реальные модели с MakerWorld (Bambu Lab).
+// img — обложка с CDN MakerWorld (если пусто, сайт попробует подтянуть её сам через /api/preview)
+// h — примерное время печати одной штуки, часы
+export const MW_HOME = 'https://makerworld.com/ru';
+const CDN = 'https://makerworld.bblmw.com/makerworld/model/';
+
 export const CATEGORIES = [
-  { id: 'all', label: 'Всё', icon: '✦' },
-  { id: 'toys', label: 'Игрушки', icon: '🧸' },
-  { id: 'fidget', label: 'Антистресс', icon: '🌀' },
-  { id: 'games', label: 'Игры', icon: '🎲' },
-  { id: 'desk', label: 'Для стола', icon: '🖥️' },
-  { id: 'home', label: 'Для дома', icon: '🏠' },
-  { id: 'gifts', label: 'Подарки', icon: '🎁' },
+  { id: 'all', label: 'Все' },
+  { id: 'toys', label: 'Игрушки' },
+  { id: 'fidget', label: 'Антистресс' },
+  { id: 'games', label: 'Игры' },
+  { id: 'desk', label: 'Рабочий стол' },
+  { id: 'home', label: 'Для дома' },
 ];
 
 export const CATALOG = [
-  { id: 'flexi-dragon', t: 'Гибкий дракон', c: 'toys', e: '🐉', h: 6, lvl: 3, q: 'flexi dragon', d: 'Печатается сразу подвижным, без сборки. Хит у детей.', hue: 150 },
-  { id: 'axolotl', t: 'Аксолотль на шарнирах', c: 'toys', e: '🦎', h: 2, lvl: 2, q: 'articulated axolotl', d: 'Мягко гнётся, отлично смотрится в розовом.', hue: 330 },
-  { id: 'flexi-cat', t: 'Гибкий котик', c: 'toys', e: '🐱', h: 2, lvl: 2, q: 'flexi cat articulated', d: 'Котик, который двигается каждой частью.', hue: 30 },
-  { id: 'octopus', t: 'Осьминожка', c: 'toys', e: '🐙', h: 1.5, lvl: 1, q: 'articulated octopus', d: 'Маленький и быстрый. Можно сразу несколько.', hue: 280 },
-  { id: 'shark', t: 'Акула на шарнирах', c: 'toys', e: '🦈', h: 3, lvl: 2, q: 'articulated shark', d: 'Виляет хвостом. Круто в синем или сером.', hue: 205 },
-  { id: 'trex', t: 'Скелет динозавра', c: 'toys', e: '🦖', h: 4, lvl: 3, q: 't-rex skeleton print in place', d: 'Большой подвижный T-Rex.', hue: 95 },
-  { id: 'turtle', t: 'Черепашка', c: 'toys', e: '🐢', h: 1, lvl: 1, q: 'articulated turtle', d: 'Шевелит лапками. Быстро печатается.', hue: 120 },
-  { id: 'rocket', t: 'Ракета', c: 'toys', e: '🚀', h: 2, lvl: 2, q: 'rocket toy', d: 'Для космических миссий на ковре.', hue: 15 },
-  { id: 'benchy', t: 'Кораблик Benchy', c: 'toys', e: '⛵', h: 1, lvl: 1, q: 'benchy', d: 'Легендарный тестовый кораблик 3D-печати.', hue: 190 },
+  { id: 'dragon', t: 'Гибкий дракон', c: 'toys', h: 3, mw: 3127143, img: 'USfbb3c654c22746/design/6d017b9d9c8b4076.jpg', d: 'Печатается сразу подвижным, без поддержек и сборки.' },
+  { id: 'shark', t: 'Акула на шарнирах', c: 'toys', h: 1.3, mw: 463778, d: 'Оригинальная Articulated Shark — одна из самых популярных моделей MakerWorld.' },
+  { id: 'axolotl', t: 'Кристальный аксолотль', c: 'toys', h: 2, mw: 2296638, img: 'US1067bf992e868d/design/420d0842661bfbea.png', d: 'Подвижный, без поддержек, можно в один или несколько цветов.' },
+  { id: 'axolotl2', t: 'Аксолотль на шарнирах', c: 'toys', h: 2, mw: 2660128, d: 'Несколько размеров, печать без AMS.' },
+  { id: 'cats', t: 'Гибкие котики', c: 'toys', h: 0.6, mw: 2203998, d: 'Короткая и длинная версии, печать около 40 минут.' },
+  { id: 'octopus', t: 'Осьминог', c: 'toys', h: 1, mw: 1956534, img: 'USb419cce49b0282/design/2025-11-03_cfc4a4fe411078.jpg', d: 'Маленький осьминог с подвижными щупальцами.' },
+  { id: 'octopus2', t: 'Осьминог детализированный', c: 'toys', h: 3.8, mw: 1013703, d: 'Крупнее, с фактурной головой. Печатается одной деталью.' },
+  { id: 'benchy', t: 'Кораблик 3DBenchy', c: 'toys', h: 0.5, mw: 15106, img: 'US3f9fe757a16d44/design/2023-09-20_cfa497eb38848.jpg', d: 'Классическая тестовая модель 3D-печати.' },
 
-  { id: 'gear-spinner', t: 'Спиннер с шестерёнками', c: 'fidget', e: '⚙️', h: 1, lvl: 1, q: 'gear fidget spinner', d: 'Крутится и щёлкает шестерёнками.', hue: 45 },
-  { id: 'infinity-cube', t: 'Бесконечный куб', c: 'fidget', e: '🧊', h: 1.5, lvl: 2, q: 'infinity cube fidget', d: 'Складывается бесконечно. Затягивает.', hue: 185 },
-  { id: 'clicker', t: 'Кликер-кнопка', c: 'fidget', e: '⌨️', h: 0.5, lvl: 1, q: 'fidget clicker', d: 'Щёлк-щёлк — антистресс в кармане.', hue: 260 },
-  { id: 'fidget-slider', t: 'Слайдер-антистресс', c: 'fidget', e: '🌀', h: 1, lvl: 1, q: 'fidget slider', d: 'Двигается туда-сюда с приятным клацанием.', hue: 310 },
-  { id: 'gyro', t: 'Гироскоп-кольцо', c: 'fidget', e: '💫', h: 1, lvl: 1, q: 'gyro ring fidget print in place', d: 'Кольца крутятся друг в друге.', hue: 50 },
+  { id: 'cube', t: 'Бесконечный куб', c: 'fidget', h: 3, mw: 888012, d: 'Складывается бесконечно. Есть версии в 1 и 3 цвета.' },
+  { id: 'planetary', t: 'Спиннер с планетарной передачей', c: 'fidget', h: 1.5, mw: 1932158, d: 'Рабочая планетарная передача, печатается собранной.' },
+  { id: 'gear-ring', t: 'Кольцо-спиннер с шестернями', c: 'fidget', h: 0.5, mw: 3099664, img: 'US151d3200d6c7bb/design/5b261bdb014bdae9.jpg', d: 'Лёгкий карманный спиннер, около 6 г пластика.' },
 
-  { id: 'marble-run', t: 'Мраморная трасса', c: 'games', e: '🎢', h: 8, lvl: 3, q: 'marble run', d: 'Шарики катятся по горкам. Долго, но того стоит.', hue: 345 },
-  { id: 'chess', t: 'Шахматы', c: 'games', e: '♟️', h: 10, lvl: 3, q: 'chess set', d: 'Полный набор фигур. Печатаем в два цвета.', hue: 0 },
-  { id: 'puzzle-box', t: 'Коробка-головоломка', c: 'games', e: '🧩', h: 3, lvl: 2, q: 'puzzle box', d: 'Открой, если сможешь. Внутрь можно спрятать сюрприз.', hue: 75 },
-  { id: 'catapult', t: 'Мини-катапульта', c: 'games', e: '🏹', h: 2, lvl: 2, q: 'mini catapult', d: 'Стреляет шариками из бумаги.', hue: 25 },
-  { id: 'labyrinth', t: 'Лабиринт с шариком', c: 'games', e: '🌐', h: 4, lvl: 3, q: 'maze ball labyrinth', d: 'Проведи шарик к центру.', hue: 230 },
+  { id: 'marble', t: 'Модульная мраморная трасса', c: 'games', h: 6, mw: 879349, img: 'DSM00000000879349/design/2024-12-14_7580fc43e4efc.png', d: 'Детали печатаются плоско и собираются в любую трассу.' },
+  { id: 'chess', t: 'Шахматы, турнирные пропорции', c: 'games', h: 8, mw: 2527178, img: 'DSM00000002527178/design/9d6b34037bc3ccf8.jpg', d: 'Классический набор фигур, печатается в двух цветах.' },
+  { id: 'chess-travel', t: 'Дорожные шахматы с доской', c: 'games', h: 8.3, mw: 2915700, d: 'Компактная доска и фигуры, без AMS.' },
 
-  { id: 'phone-stand', t: 'Подставка для телефона', c: 'desk', e: '📱', h: 1, lvl: 1, q: 'phone stand', d: 'Чтобы смотреть мультики без рук.', hue: 210 },
-  { id: 'headphones', t: 'Держатель наушников', c: 'desk', e: '🎧', h: 3, lvl: 2, q: 'headphone stand', d: 'Аккуратное место для наушников.', hue: 270 },
-  { id: 'pencil-cup', t: 'Стакан для карандашей', c: 'desk', e: '✏️', h: 2, lvl: 1, q: 'pencil holder', d: 'Для ручек, карандашей и фломастеров.', hue: 55 },
-  { id: 'gamepad', t: 'Держатель геймпада', c: 'desk', e: '🎮', h: 2, lvl: 2, q: 'controller holder', d: 'Геймпад всегда на месте.', hue: 290 },
-  { id: 'cable', t: 'Органайзер для проводов', c: 'desk', e: '🔌', h: 0.5, lvl: 1, q: 'cable organizer', d: 'Зарядки больше не падают со стола.', hue: 160 },
+  { id: 'phone', t: 'Подставка для телефона', c: 'desk', h: 2, mw: 2944494, img: 'US700308606350ae/design/b89f8f7d71ec5076.jpg', d: 'Держит телефон вертикально и горизонтально.' },
+  { id: 'pencil', t: 'Стакан для ручек', c: 'desk', h: 2, mw: 2325995, img: 'DSM00000002325995/design/5c48b86e5ff50a7a.png', d: 'Простой и аккуратный органайзер для стола.' },
+  { id: 'organizer', t: 'Органайзер для стола', c: 'desk', h: 4, mw: 2548565, img: 'USc3a14e3235ba94/669905306/instance/945f1f48a44065f8.png', d: 'Ручки, ножницы, степлер и лоток для мелочей.' },
+  { id: 'headphones', t: 'Подставка для наушников', c: 'desk', h: 5.4, mw: 1539604, d: 'Минималистичная, печатается одной деталью.' },
 
-  { id: 'planter', t: 'Кашпо для цветка', c: 'home', e: '🪴', h: 3, lvl: 2, q: 'planter pot', d: 'Красивый горшок с поддоном.', hue: 110 },
-  { id: 'vase', t: 'Спиральная ваза', c: 'home', e: '🏺', h: 2, lvl: 1, q: 'spiral vase', d: 'Печатается одной стенкой — очень эффектно.', hue: 20 },
-  { id: 'hooks', t: 'Крючки на стену', c: 'home', e: '🪝', h: 0.5, lvl: 1, q: 'wall hook', d: 'Для ключей, рюкзаков и полотенец.', hue: 200 },
-  { id: 'lamp', t: 'Ночник-абажур', c: 'home', e: '💡', h: 5, lvl: 3, q: 'lamp shade', d: 'Под светодиодную свечку или гирлянду.', hue: 45 },
-
-  { id: 'keychain', t: 'Брелок с именем', c: 'gifts', e: '🔑', h: 0.5, lvl: 1, q: 'name keychain', d: 'Напиши имя в комментарии — сделаем.', hue: 140 },
-  { id: 'bookmark', t: 'Закладка для книги', c: 'gifts', e: '🔖', h: 0.5, lvl: 1, q: 'bookmark', d: 'Тонкая и прочная. Можно с именем.', hue: 350 },
-  { id: 'heart-box', t: 'Шкатулка-сердце', c: 'gifts', e: '💝', h: 2, lvl: 2, q: 'heart box', d: 'Подарок для мамы или бабушки.', hue: 335 },
-  { id: 'star', t: 'Звезда-украшение', c: 'gifts', e: '⭐', h: 1, lvl: 1, q: 'star ornament', d: 'Ёлочная игрушка или подвеска.', hue: 48 },
-];
+  { id: 'incurva', t: 'Кашпо с автополивом Incurva', c: 'home', h: 4, mw: 2543366, img: 'USbfef966dff239/design/d38d07ea7dfcd1b0.png', d: 'Для зелени на подоконнике, полив через фитиль.' },
+  { id: 'planter', t: 'Кашпо с автополивом, модерн', c: 'home', h: 5, mw: 2315160, img: 'US83126b4e35328d/design/068e606c7ef58256.png', d: 'Полностью печатное, без дополнительных деталей.' },
+  { id: 'vase', t: 'Ваза Helix', c: 'home', h: 2, mw: 2969947, img: 'US8c0ebc8d6ffca4/design/28e7f561017adca8.png', d: 'Печатается в режиме вазы одной стенкой.' },
+].map((m) => ({
+  ...m,
+  url: `https://makerworld.com/ru/models/${m.mw}`,
+  img: m.img ? `${CDN}${m.img}?x-oss-process=image/resize,w_640/format,webp` : '',
+}));
 
 export const COLORS = [
   { n: 'Любой', v: 'any' },
@@ -68,4 +63,4 @@ export const COLORS = [
   { n: 'Мультицвет', v: 'multi' },
 ];
 
-export const mwUrl = (q) => `https://makerworld.com/en/search/models?keyword=${encodeURIComponent(q)}`;
+export const mwSearch = (q) => `https://makerworld.com/ru/search/models?keyword=${encodeURIComponent(q)}`;

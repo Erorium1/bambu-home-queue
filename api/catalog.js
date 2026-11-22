@@ -1,4 +1,5 @@
 import { wrap, send, body, db, ensureSchema, requireRole, clean, cleanUrl } from './_lib.js';
+import { normalizeUrl, getPreview } from './preview.js';
 
 // Свои модели, которые админ добавляет в каталог (поверх встроенных)
 export default wrap(async (req, res) => {
@@ -15,12 +16,21 @@ export default wrap(async (req, res) => {
   const b = await body(req);
 
   if (req.method === 'POST') {
-    const title = clean(b.title, 80);
+    let title = clean(b.title, 80);
+    let image_url = cleanUrl(b.image_url);
+    const model_url = cleanUrl(b.model_url);
+    if ((!image_url || !title) && model_url && normalizeUrl(model_url)) {
+      try {
+        const p = await getPreview(normalizeUrl(model_url));
+        image_url = image_url || p.image || null;
+        title = title || clean(p.title, 80);
+      } catch {}
+    }
     if (!title) return send(res, 400, { error: 'Нужно название' });
     const [item] = await sql`
       INSERT INTO catalog_custom (title, category, emoji, image_url, model_url, hours)
       VALUES (${title}, ${clean(b.category, 30) || 'Разное'}, ${clean(b.emoji, 8) || '✨'},
-              ${cleanUrl(b.image_url)}, ${cleanUrl(b.model_url)},
+              ${image_url}, ${model_url},
               ${Math.min(Math.max(Number(b.hours) || 1, 0.25), 48)})
       RETURNING *`;
     return send(res, 201, { item });

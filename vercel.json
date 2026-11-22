@@ -1,0 +1,5 @@
+{
+  "redirects": [
+    { "source": "/mw", "destination": "https://makerworld.com/ru", "permanent": false }
+  ]
+}

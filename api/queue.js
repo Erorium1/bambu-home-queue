@@ -1,6 +1,7 @@
 import {
   wrap, send, body, db, ensureSchema, requireRole, clean, cleanUrl, telegram,
 } from './_lib.js';
+import { normalizeUrl, getPreview } from './preview.js';
 
 const ORDER_ACTIVE = (sql) => sql`
   SELECT * FROM print_queue
@@ -38,6 +39,10 @@ export default wrap(async (req, res) => {
     const hours = Math.min(Math.max(Number(b.hours) || 1, 0.25), 48);
     const model_url = cleanUrl(b.model_url);
     const emoji = clean(b.emoji, 8) || '🧩';
+    let image_url = cleanUrl(b.image_url);
+    if (!image_url && model_url && normalizeUrl(model_url)) {
+      try { image_url = (await getPreview(normalizeUrl(model_url))).image || null; } catch {}
+    }
     const color = clean(b.color, 40) || 'Любой';
     const comment = clean(b.comment, 300);
 
@@ -51,8 +56,8 @@ export default wrap(async (req, res) => {
     }
 
     const [row] = await sql`
-      INSERT INTO print_queue (name, model_title, model_url, emoji, color, qty, comment, hours)
-      VALUES (${name}, ${model_title}, ${model_url}, ${emoji}, ${color}, ${qty}, ${comment || null}, ${hours})
+      INSERT INTO print_queue (name, model_title, model_url, emoji, color, qty, comment, hours, image_url)
+      VALUES (${name}, ${model_title}, ${model_url}, ${emoji}, ${color}, ${qty}, ${comment || null}, ${hours}, ${image_url})
       RETURNING *`;
 
     const active = await ORDER_ACTIVE(sql);
@@ -64,7 +69,7 @@ export default wrap(async (req, res) => {
       `🆕 <b>Новая заявка на печать</b>`,
       ``,
       `👤 <b>${e(name)}</b>`,
-      `${e(emoji)} ${e(model_title)}${qty > 1 ? ` × ${qty}` : ''}`,
+      `🧩 ${e(model_title)}${qty > 1 ? ` × ${qty}` : ''}`,
       `🎨 Цвет: ${e(color)}`,
       `⏱ ~${fmtH(hours * qty)}`,
       comment ? `💬 ${e(comment)}` : null,
@@ -72,7 +77,7 @@ export default wrap(async (req, res) => {
       ``,
       `📍 Место в очереди: <b>#${pos}</b> из ${active.length}`,
       ahead > 0 ? `⌛ Перед ней ещё ~${fmtH(ahead)} печати` : `⚡ Можно запускать сразу!`,
-    ]);
+    ], image_url);
 
     return send(res, 201, { item: row, position: pos, telegram: tg.ok });
   }
@@ -109,7 +114,7 @@ export default wrap(async (req, res) => {
 
     if (action === 'done') {
       const e = telegram.esc;
-      await telegram([`✅ Готово: ${e(row.emoji)} <b>${e(row.model_title)}</b> для <b>${e(row.name)}</b>`]);
+      await telegram([`✅ Готово: <b>${e(row.model_title)}</b> для <b>${e(row.name)}</b>`]);
     }
     return send(res, 200, { item: row });
   }
