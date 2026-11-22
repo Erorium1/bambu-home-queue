@@ -406,6 +406,9 @@ a { color: inherit; }
 body.is-admin .admin-only { display: block !important; }
 body.is-admin .admin-only.inline { display: inline-flex !important; }
 .add-model { margin-top: 26px; padding: 22px; }
+.tg-row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 18px; padding-bottom: 18px; border-bottom: 1px solid var(--line); font-size: 14px; }
+.tg-row .ok { color: var(--g2); }
+.tg-row .bad { color: #ffb3bb; }
 .add-model h3 { margin: 0 0 14px; font-family: var(--f-h); font-size: 18px; }
 .add-form { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
 .add-form .wide { grid-column: span 2; }

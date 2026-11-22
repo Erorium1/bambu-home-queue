@@ -4,8 +4,8 @@ import { neon } from '@neondatabase/serverless';
 /* ---------- env ---------- */
 export const SITE_PASSWORD = process.env.SITE_PASSWORD || '676912';
 export const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || '';
-const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN || '';
-const OWNER_ID = process.env.TELEGRAM_OWNER_ID || process.env.TELEGRAM_CHAT_ID || '';
+const BOT_TOKEN = (process.env.TELEGRAM_BOT_TOKEN || '').trim();
+const OWNER_ID = (process.env.TELEGRAM_OWNER_ID || process.env.TELEGRAM_CHAT_ID || '').trim();
 const DB_URL =
   process.env.DATABASE_URL ||
   process.env.POSTGRES_URL ||

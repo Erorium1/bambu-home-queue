@@ -327,6 +327,17 @@ $('#addModelForm').addEventListener('submit', async (e) => {
   } catch (er) { toast(er.message, 'err'); }
 });
 
+$('#tgTest').addEventListener('click', async (e) => {
+  const out = $('#tgRes');
+  e.target.disabled = true; out.className = 'muted'; out.textContent = 'Проверяю…';
+  try {
+    const j = await api('/api/tg-test', { method: 'POST' });
+    out.className = j.ok ? 'ok' : 'bad';
+    out.textContent = (j.ok ? '✅ ' : '⚠️ ') + j.hint;
+  } catch (er) { out.className = 'bad'; out.textContent = er.message; }
+  e.target.disabled = false;
+});
+
 /* ---------- order modal ---------- */
 function openOrder(model) {
   const isCustom = !model;
