@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Печать Дома · очередь на 3D-принтер</title>
+  <meta name="theme-color" content="#0a0c0b" />
+  <meta name="robots" content="noindex" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='16' fill='%2300ae42'/><path d='M20 18h24v10l-8 8v6h-8v-6l-8-8z' fill='%230a0c0b'/><rect x='18' y='46' width='28' height='4' rx='2' fill='%230a0c0b'/></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;900&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/assets/styles.css" />
+</head>
+<body>
+  <div class="bg-layers" aria-hidden="true"></div>
+  <div class="bg-glow" aria-hidden="true"></div>
+
+  <!-- ================= LOGIN ================= -->
+  <section id="login" class="login" hidden>
+    <div class="login-art">
+      <div class="printer" aria-hidden="true">
+        <div class="pr-frame">
+          <div class="pr-top"><span class="pr-led"></span><span class="pr-led g"></span></div>
+          <div class="pr-chamber">
+            <div class="pr-rail"></div>
+            <div class="pr-head"><div class="pr-nozzle"></div><div class="pr-glow"></div></div>
+            <div class="pr-print">
+              <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+            </div>
+            <div class="pr-bed"></div>
+          </div>
+          <div class="pr-screen"><span>PRINTING</span><b class="pr-pct">0%</b></div>
+        </div>
+      </div>
+      <div class="login-title">
+        <div class="eyebrow">домашняя 3D-мастерская</div>
+        <h1>Печать<br /><span>Дома</span></h1>
+        <p>Выбирай модель, вставай в очередь —<br />и принтер сделает остальное.</p>
+      </div>
+    </div>
+
+    <div class="login-card glass">
+      <div class="lc-head">
+        <div class="lock-ic">🔒</div>
+        <div>
+          <h2>Вход</h2>
+          <p>Введи код из 6 цифр</p>
+        </div>
+      </div>
+      <div class="pin-dots" id="pinDots"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <div class="pin-err" id="pinErr"></div>
+      <div class="pinpad" id="pinpad">
+        <button data-k="1">1</button><button data-k="2">2</button><button data-k="3">3</button>
+        <button data-k="4">4</button><button data-k="5">5</button><button data-k="6">6</button>
+        <button data-k="7">7</button><button data-k="8">8</button><button data-k="9">9</button>
+        <button data-k="clr" class="ghost">C</button><button data-k="0">0</button><button data-k="del" class="ghost">⌫</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= APP ================= -->
+  <div id="app" class="app" hidden>
+    <header class="topbar">
+      <a class="brand" href="#" data-tab="catalog">
+        <span class="brand-mark">
+          <svg viewBox="0 0 32 32"><path d="M9 6h14v6l-4.5 4.5V20h-5v-3.5L9 12z" /><rect x="7" y="23" width="18" height="3" rx="1.5" /></svg>
+        </span>
+        <span class="brand-txt">Печать<b>Дома</b></span>
+      </a>
+      <div class="status-chip" id="statusChip"><span class="dot"></span><span class="txt">…</span></div>
+      <div class="top-actions">
+        <button class="icon-btn" id="adminBtn" title="Режим админа">🛠️</button>
+        <button class="icon-btn" id="logoutBtn" title="Выйти">⏏</button>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="hero-txt">
+          <div class="eyebrow">каталог · очередь · уведомления</div>
+          <h1>Что <span class="grad">напечатаем</span><br />сегодня?</h1>
+          <p>Выбери модель из каталога или вставь свою ссылку с MakerWorld. Заявка встанет в очередь, а мастеру сразу придёт сообщение в Telegram.</p>
+        </div>
+        <div class="stats" id="stats">
+          <div class="stat"><b data-s="queued">0</b><span>в очереди</span></div>
+          <div class="stat"><b data-s="wait">0 ч</b><span>ждать всем</span></div>
+          <div class="stat"><b data-s="done">0</b><span>уже готово</span></div>
+        </div>
+      </section>
+
+      <section class="now" id="nowPrinting" hidden></section>
+
+      <nav class="tabs" id="tabs">
+        <button data-tab="catalog" class="on">🧩 Каталог</button>
+        <button data-tab="queue">📋 Очередь <span class="badge" id="qBadge">0</span></button>
+        <button data-tab="done">✅ Готово</button>
+        <span class="tab-ink"></span>
+      </nav>
+
+      <!-- catalog -->
+      <section class="panel" data-panel="catalog">
+        <div class="cat-tools">
+          <label class="search">
+            <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" /></svg>
+            <input id="search" placeholder="Найти: дракон, кубик, подставка…" autocomplete="off" />
+          </label>
+          <div class="chips" id="chips"></div>
+        </div>
+        <div class="grid" id="grid"></div>
+
+        <div class="admin-only add-model glass" id="addModel">
+          <h3>➕ Добавить модель в каталог</h3>
+          <form id="addModelForm" class="add-form">
+            <input name="title" placeholder="Название" required maxlength="80" />
+            <input name="emoji" placeholder="Эмодзи 🦄" maxlength="8" />
+            <select name="category" id="addCat"></select>
+            <input name="hours" type="number" min="0.25" step="0.25" placeholder="Часов печати" />
+            <input name="model_url" placeholder="Ссылка на MakerWorld" class="wide" />
+            <input name="image_url" placeholder="Ссылка на картинку (необязательно)" class="wide" />
+            <button class="btn primary wide" type="submit">Добавить</button>
+          </form>
+        </div>
+      </section>
+
+      <!-- queue -->
+      <section class="panel" data-panel="queue" hidden>
+        <div class="list" id="queueList"></div>
+      </section>
+
+      <!-- done -->
+      <section class="panel" data-panel="done" hidden>
+        <div class="list" id="doneList"></div>
+      </section>
+    </main>
+
+    <footer class="foot">
+      <span>Сделано на 3D-принтере с ❤️</span>
+      <span class="mono" id="syncInfo"></span>
+    </footer>
+  </div>
+
+  <!-- ================= ORDER MODAL ================= -->
+  <div class="modal" id="orderModal" hidden>
+    <div class="modal-back" data-close></div>
+    <div class="modal-card glass">
+      <button class="modal-x" data-close>✕</button>
+      <div id="orderBody"></div>
+    </div>
+  </div>
+
+  <!-- admin modal -->
+  <div class="modal" id="adminModal" hidden>
+    <div class="modal-back" data-close></div>
+    <div class="modal-card glass small">
+      <button class="modal-x" data-close>✕</button>
+      <h2 class="m-title">🛠️ Режим мастера</h2>
+      <p class="muted">Управление очередью: запуск, готово, отмена, поднять наверх.</p>
+      <form id="adminForm">
+        <input type="password" name="password" placeholder="Пароль админа" autocomplete="current-password" required />
+        <button class="btn primary full" type="submit">Войти как мастер</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="toasts" id="toasts"></div>
+  <canvas id="confetti" aria-hidden="true"></canvas>
+
+  <script type="module" src="/assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+{
+  "name": "bambu-home-queue",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Домашняя очередь на 3D-печать: каталог, очередь с именами, Neon DB, уведомления в Telegram",
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@neondatabase/serverless": "^1.0.0"
+  }
+}
